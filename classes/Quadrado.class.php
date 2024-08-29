@@ -1,27 +1,15 @@
 <?php
 require_once("../classes/Database.class.php");
 require_once("../classes/UnidadeMedida.class.php");
+require_once("../classes/Formas.class.php");
 
-class Quadrado{
-    private $id; 
+class Quadrado extends Formas{
     private $lado; 
-    private $cor;
-    private $un; //objeto UnidadeMedida
-    private $fundo;
 
-     public function __construct($id = 0, $lado = "null", $cor = "null", UnidadeMedida $un = null, $fundo = "null"){
-        $this->setId($id);
+     public function __construct($id = 0, $lado = "null", $cor = "null", 
+                                     UnidadeMedida $un = null, $fundo = "null"){
+        parent::__construct($id,$cor,$un,$fundo);
         $this->setLado($lado);
-        $this->setCor($cor);
-        $this->setUn($un);
-        $this->setFundo($fundo);
-    }
-
-    public function setId($novoId){
-        if ($novoId < 0)
-            throw new Exception("Erro: id inválido!");
-        else
-            $this->id = $novoId;
     }
 
     public function setLado($lado){
@@ -31,32 +19,13 @@ class Quadrado{
             $this->lado = $lado;
     }
 
-    public function setCor($cor){
-        $this->cor = $cor;
-    }
-
-    public function setFundo($fundo){
-        $this->fundo = $fundo;
-    }
-
-    public function setUn(UnidadeMedida $un = null){
-        if ($un)
-            $this->un = $un;
-        else
-            throw new Exception("Erro: Deve ser informada uma unidade de medida!");
-    }
- 
-    public function getId(){ return $this->id; }
     public function getLado():string { return $this->lado;}
-    public function getCor() { return $this->cor;}
-    public function getUn() { return $this->un;}
-    public function getFundo() { return $this->fundo;}
 
     public function incluir(){
         $sql = 'INSERT INTO quadrado (lado, cor, id_un, fundo)   
                      VALUES (:lado, :cor, :un, :fundo)';
         $parametros = array(':lado'=>$this->getLado(),
-                            ':cor'=>$this->getCor(),
+                            ':cor'=>parent::getCor(),
                             ':un'=>$this->getUn()->getId(),
                             ':fundo'=>$this->getFundo());
 
@@ -84,7 +53,7 @@ class Quadrado{
         return true;
     }    
 
-    public static function listar($tipo = 0, $busca = "" ){
+    public static function listar($tipo = 0, $busca = "" ):array{
         $sql = "SELECT * FROM quadrado";        
         if ($tipo > 0 )
             switch($tipo){
@@ -111,6 +80,13 @@ class Quadrado{
                 width:{$this->getLado()}{$this->getUn()->getUn()};
                 height:{$this->getLado()}{$this->getUn()->getUn()};
                 background-color:{$this->getCor()};
-                background-image:url(\"{$this->getFundo()}\")'></div>";
+                background-image:url(\"{$this->getFundo()}\");background-size:contain'></div>";
+    }
+
+    public function calcularArea(){
+        // TODO: implementar
+    }
+    public function calcularPerimetro(){
+        // TODO: implementar
     }
 }
