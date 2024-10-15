@@ -1,6 +1,6 @@
 <?php
 
-abstract class Formas{
+abstract class Forma{
     private $id; 
     private $cor;
     private $un; //objeto UnidadeMedida

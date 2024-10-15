@@ -1,59 +1,46 @@
-<?php  
+<?php
 session_start();
-include_once('unidademedida.php'); 
-?>
+require_once("../classes/autoload.php");
+require_once("../config/config.inc.php");
 
+if($_SERVER['REQUEST_METHOD'] == 'GET'){ 
+    $id =  isset($_GET['id'])?$_GET['id']:0;
+    $msg =  isset($_GET['MSG'])?$_GET['MSG']:"";
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro de Unidade Medido</title>
-</head>
-<body>
-    <h1>Cadastro de Unidade de Medida</h1>
-    <form action="unidademedida.php" method="POST">
-        <label for="id">Id:</label>
-        <input type="text" name="id" id="id" readonly value="<?=isset($unidade)?$unidade->getId():0 ?>">
-        <label for="un">Un:</label>
-        <input type="text" name="un" id="un" value="<?=isset($unidade)?$unidade->getUn():'' ?>">
-        <button type='submit' name='acao' value='salvar'>Salvar</button>
-        <button type='submit' name='acao' value='excluir'>Excluir</button>
-        <button type='reset'>Cancelar</button>
-    </form>
+    // pegar o formulário e preencher, após apresentar para o usuário
+    $formulario = file_get_contents('form_cadastro_un.html');
 
-   <!-- Formulário de pesquisa -->
-   <form action="" method="get">
-        <fieldset>
-            <legend>Pesquisa</legend>
-            <label for="busca">Busca:</label>
-            <input type="text" name="busca" id="busca" value="">
-            <label for="tipo">Tipo:</label>
-            <select name="tipo" id="tipo">
-                <option value="">Escolha</option>
-                <option value="1">Id</option>
-                <option value="2">Un</option>
-            </select>
-            <button type='submit'>Buscar</button>
-   
-        </fieldset>
-    </form>
-    <hr>
-    <h1>Lista meus contatos</h1>
-    <table>
-        <tr>
-            <th>Id</th>
-            <th>Un</th>
-        </tr>
-        <?php  
-            foreach($lista as $unidade){ 
-                echo "<tr>
-                          <td><a href='index.php?id=".$unidade->getId()."'>".$unidade->getId()."</a></td>
-                          <td>{$unidade->getUn()}</td>
-                      </tr>";
-            }     
-        ?>
-    </table>
-</body>
-</html>
+    if ($id > 0){
+        $unidade = UnidadeMedida::listar(1,$id)[0];
+        $formulario = str_replace('{id}',$unidade->getId(),$formulario); 
+        $formulario = str_replace('{un}',$unidade->getUn(),$formulario); 
+    }else{
+        $formulario = str_replace('{id}','0',$formulario); 
+        $formulario = str_replace('{un}','',$formulario); 
+    }
+    
+    print($formulario);
+    include "listaunidades.php";
+    
+}elseif ($_SERVER['REQUEST_METHOD'] == 'POST'){
+    $id =  isset($_POST['id'])?$_POST['id']:0; 
+    var_dump($id);
+    $un =  isset($_POST['un'])?$_POST['un']:""; 
+    $acao =  isset($_POST['acao'])?$_POST['acao']:0; 
+    try{
+        $unidade = new UnidadeMedida($id,$un);
+        if($acao == 'salvar'){
+            if($id > 0)
+                $unidade->alterar();
+            else                     
+                $unidade->incluir();
+        }elseif ($acao == 'excluir'){
+           $unidade->excluir();
+        }
+        $_SESSION['MSG'] = "Dados inseridos/Alterados com sucesso!";
+    }catch(Exception $e){ 
+        $_SESSION['MSG'] = 'ERRO: '.$e->getMessage();
+    }finally{
+        header('location: index.php'); 
+    }
+}

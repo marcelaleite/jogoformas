@@ -1,9 +1,9 @@
 <?php
 require_once("../classes/Database.class.php");
 require_once("../classes/UnidadeMedida.class.php");
-require_once("../classes/Formas.class.php");
+require_once("../classes/Forma.class.php");
 
-class Quadrado extends Formas{
+class Quadrado extends Forma{
     private $lado; 
 
      public function __construct($id = 0, $lado = "null", $cor = "null", 

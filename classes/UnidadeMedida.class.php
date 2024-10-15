@@ -12,7 +12,7 @@ class UnidadeMedida{
 
     public function setId($novoId){
         if ($novoId < 0)
-            throw new Exception("Erro: id inválido!");
+            throw new Exception("Erro: id inválido!: Valor: ".$novoId);
         else
             $this->id = $novoId;
     }
