@@ -11,12 +11,12 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
     $lista = UnidadeMedida::listar($tipo,$busca); 
     $itens = "";
     foreach($lista as $unidade){ 
-        $item = file_get_contents('itens_unidade.html');
+        $item = file_get_contents('templates/itens_unidade.html');
         $item = str_replace('{id}',$unidade->getId(),$item);
         $item = str_replace('{un}',$unidade->getUn(),$item);
         $itens .= $item; 
     }   
-    $templatelista = file_get_contents('lista_un.html');
+    $templatelista = file_get_contents('templates/lista_un.html');
     $templatelista = str_replace('{itens}',$itens,$templatelista);
     
     print($templatelista);

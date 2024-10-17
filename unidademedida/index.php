@@ -8,7 +8,7 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
     $msg =  isset($_GET['MSG'])?$_GET['MSG']:"";
 
     // pegar o formulário e preencher, após apresentar para o usuário
-    $formulario = file_get_contents('form_cadastro_un.html');
+    $formulario = file_get_contents('templates/form_cadastro_un.html');
 
     if ($id > 0){
         $unidade = UnidadeMedida::listar(1,$id)[0];
@@ -24,7 +24,6 @@ if($_SERVER['REQUEST_METHOD'] == 'GET'){
     
 }elseif ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $id =  isset($_POST['id'])?$_POST['id']:0; 
-    var_dump($id);
     $un =  isset($_POST['un'])?$_POST['un']:""; 
     $acao =  isset($_POST['acao'])?$_POST['acao']:0; 
     try{
